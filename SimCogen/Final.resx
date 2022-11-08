@@ -58,10 +58,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="picCogen.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="CogenBG.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAyAAAAIzCAYAAAD4RX3pAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vQAADr0BR/uQrQAAABJ0RVh0U29mdHdhcmUAR3JlZW5zaG90XlUIBQAA/5RJREFUeF7s3XV8FHf+x/HF
+        vAAADrwBlbxySQAAABJ0RVh0U29mdHdhcmUAR3JlZW5zaG90XlUIBQAA/5RJREFUeF7s3XV8FHf+x/HF
         ixWKS3EP7u7uUtyKe3F3lwQSSIhB3D1Zm3XJxiFY0CIt1etJ7+531muv7fv3/c4mIYSlDYQlwueP52Oz
         szOzs8vK98Xs7kiUSiUIIYQQQggh5G2gACGEEEIIIYS8NRQghBBCCCGEkLeGAoQQQgghhBDy1lCAEEII
         IYQQQt4aChBCCCGEEELIW0MBQgghhBBCCHlrKEAIIYQQQgghbw0FCCGEEEIIIeStoQApoRQKhc3phBBC
