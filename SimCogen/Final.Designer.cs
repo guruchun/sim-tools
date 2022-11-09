@@ -200,6 +200,7 @@
             this.DgvFC.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvFC.Location = new System.Drawing.Point(824, 334);
             this.DgvFC.Name = "DgvFC";
+            this.DgvFC.RowHeadersVisible = false;
             this.DgvFC.RowTemplate.Height = 25;
             this.DgvFC.Size = new System.Drawing.Size(202, 243);
             this.DgvFC.TabIndex = 19;
@@ -212,6 +213,7 @@
             this.DgvCogen.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvCogen.Location = new System.Drawing.Point(824, 33);
             this.DgvCogen.Name = "DgvCogen";
+            this.DgvCogen.RowHeadersVisible = false;
             this.DgvCogen.RowTemplate.Height = 25;
             this.DgvCogen.Size = new System.Drawing.Size(202, 256);
             this.DgvCogen.TabIndex = 20;

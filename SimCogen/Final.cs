@@ -1,12 +1,13 @@
 ﻿using System.Data;
 using System.Diagnostics;
+using FcpUtils;
 using System.Xml.Linq;
 
 namespace SimCogen
 {
     public partial class Final : Form
     {
-        private DataTable TblCogen = new DataTable();
+        private DataTable TblCogen = new DataTable("DtCogen");
         private DataTable[] TblFCell = new DataTable[6];
 
         public Final()
@@ -23,28 +24,50 @@ namespace SimCogen
             // for TblCogen
             for (int i = 0; i < colName.Length; i++)
             {
-                DataColumn col = new DataColumn(colName[i], dataType: Type.GetType(colType[i]));
+                DataColumn col = new DataColumn(colName[i], dataType: Type.GetType(colType[i]) ?? typeof(String));
                 TblCogen.Columns.Add(col);
             }
             // for searching, filtering
-            TblCogen.PrimaryKey = new DataColumn[] { TblCogen.Columns["Name"] };
+            TblCogen.PrimaryKey = new DataColumn[] { (TblCogen.Columns["Name"] ?? TblCogen.Columns[0]) };
             DgvCogen.DataSource = TblCogen;
 
             // for TblFCell
             for (int fc = 0; fc < 6; fc++)
             {
+                TblFCell[fc] = new DataTable("DtFCell-" + fc);
                 for (int i = 0; i < colName.Length; i++)
                 {
-                    DataColumn col = new DataColumn(colName[i], dataType: Type.GetType(colType[i]));
+                    DataColumn col = new DataColumn(colName[i], dataType: Type.GetType(colType[i]) ?? typeof(String));
                     TblFCell[fc].Columns.Add(col);
                 }
-                TblFCell[fc].PrimaryKey = new DataColumn[] { TblFCell[fc].Columns["Name"] };
+                TblFCell[fc].PrimaryKey = new DataColumn[] { TblFCell[fc].Columns["Name"] ?? TblFCell[fc].Columns[0] };
             }
             DgvFC.DataSource = TblFCell[0];
         }
 
         private void LoadDataTable()
         {
+            // 임시
+            string fileFullName = "config/init-data-cogen.txt";
+            // open property file
+            Property prop = new(fileFullName);
+
+            // update DataGridView directly
+            //foreach (DataGridViewRow row in DgvCogen.Rows)
+            //{
+            //    // get tag value
+            //    string tag = (string)row.Cells[3].Value;
+            //    if (String.IsNullOrEmpty(tag))
+            //    {
+            //        row.Cells[1].Value = "0";
+            //    }
+            //    else
+            //    {
+            //        row.Cells[1].Value = prop.Get(tag, "0");
+            //    }
+            //}
+
+            // update DataTable
         }
 
         private void Final_Load(object sender, EventArgs e)
@@ -90,7 +113,7 @@ namespace SimCogen
 
                     // add name on dictionary
                     string name = tb.Name[3..];
-                    TblCogen.Rows.Add(new object[] { name, false });
+                    TblCogen.Rows.Add(new object[] { name, "" });
                 }
                 else
                 {
