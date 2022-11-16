@@ -80,7 +80,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(820, 309);
+            this.label3.Location = new System.Drawing.Point(835, 309);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(83, 15);
             this.label3.TabIndex = 2;
@@ -90,7 +90,7 @@
             // 
             this.FcID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.FcID.FormattingEnabled = true;
-            this.FcID.Location = new System.Drawing.Point(970, 306);
+            this.FcID.Location = new System.Drawing.Point(985, 306);
             this.FcID.Name = "FcID";
             this.FcID.Size = new System.Drawing.Size(56, 23);
             this.FcID.TabIndex = 3;
@@ -98,9 +98,10 @@
             // CogenBG
             // 
             this.CogenBG.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("CogenBG.BackgroundImage")));
+            this.CogenBG.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.CogenBG.Location = new System.Drawing.Point(21, 33);
             this.CogenBG.Name = "CogenBG";
-            this.CogenBG.Size = new System.Drawing.Size(773, 544);
+            this.CogenBG.Size = new System.Drawing.Size(798, 561);
             this.CogenBG.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.CogenBG.TabIndex = 4;
             this.CogenBG.TabStop = false;
@@ -179,7 +180,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(821, 12);
+            this.label2.Location = new System.Drawing.Point(836, 12);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(98, 15);
             this.label2.TabIndex = 16;
@@ -188,7 +189,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(945, 309);
+            this.label5.Location = new System.Drawing.Point(960, 309);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(22, 15);
             this.label5.TabIndex = 18;
@@ -198,11 +199,12 @@
             // 
             this.DgvFC.BackgroundColor = System.Drawing.SystemColors.Control;
             this.DgvFC.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvFC.Location = new System.Drawing.Point(824, 334);
+            this.DgvFC.Location = new System.Drawing.Point(839, 334);
             this.DgvFC.Name = "DgvFC";
             this.DgvFC.RowHeadersVisible = false;
+            this.DgvFC.RowHeadersWidth = 82;
             this.DgvFC.RowTemplate.Height = 25;
-            this.DgvFC.Size = new System.Drawing.Size(202, 243);
+            this.DgvFC.Size = new System.Drawing.Size(202, 260);
             this.DgvFC.TabIndex = 19;
             // 
             // DgvCogen
@@ -211,9 +213,10 @@
             this.DgvCogen.AllowUserToDeleteRows = false;
             this.DgvCogen.BackgroundColor = System.Drawing.SystemColors.Control;
             this.DgvCogen.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvCogen.Location = new System.Drawing.Point(824, 33);
+            this.DgvCogen.Location = new System.Drawing.Point(839, 33);
             this.DgvCogen.Name = "DgvCogen";
             this.DgvCogen.RowHeadersVisible = false;
+            this.DgvCogen.RowHeadersWidth = 82;
             this.DgvCogen.RowTemplate.Height = 25;
             this.DgvCogen.Size = new System.Drawing.Size(202, 256);
             this.DgvCogen.TabIndex = 20;
@@ -221,8 +224,8 @@
             // PicNc417
             // 
             this.PicNc417.BackColor = System.Drawing.Color.Transparent;
-            this.PicNc417.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.PicNc417.Image = global::SimCogen.Properties.Resources.dot_red;
+            this.PicNc417.BackgroundImage = global::SimCogen.Properties.Resources.dot_red;
+            this.PicNc417.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.PicNc417.Location = new System.Drawing.Point(514, 85);
             this.PicNc417.Name = "PicNc417";
             this.PicNc417.Size = new System.Drawing.Size(17, 16);
@@ -232,8 +235,8 @@
             // PicNc413
             // 
             this.PicNc413.BackColor = System.Drawing.Color.Transparent;
-            this.PicNc413.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.PicNc413.Image = global::SimCogen.Properties.Resources.dot_red;
+            this.PicNc413.BackgroundImage = global::SimCogen.Properties.Resources.dot_red;
+            this.PicNc413.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.PicNc413.Location = new System.Drawing.Point(513, 132);
             this.PicNc413.Name = "PicNc413";
             this.PicNc413.Size = new System.Drawing.Size(17, 16);
@@ -243,8 +246,8 @@
             // PicNc412
             // 
             this.PicNc412.BackColor = System.Drawing.Color.Transparent;
-            this.PicNc412.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.PicNc412.Image = global::SimCogen.Properties.Resources.dot_red;
+            this.PicNc412.BackgroundImage = global::SimCogen.Properties.Resources.dot_red;
+            this.PicNc412.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.PicNc412.Location = new System.Drawing.Point(516, 435);
             this.PicNc412.Name = "PicNc412";
             this.PicNc412.Size = new System.Drawing.Size(17, 16);
@@ -254,8 +257,8 @@
             // PicPmp02
             // 
             this.PicPmp02.BackColor = System.Drawing.Color.Transparent;
-            this.PicPmp02.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.PicPmp02.Image = global::SimCogen.Properties.Resources.dot_red;
+            this.PicPmp02.BackgroundImage = global::SimCogen.Properties.Resources.dot_red;
+            this.PicPmp02.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.PicPmp02.Location = new System.Drawing.Point(344, 423);
             this.PicPmp02.Name = "PicPmp02";
             this.PicPmp02.Size = new System.Drawing.Size(17, 16);
@@ -265,10 +268,10 @@
             // PicPmp01
             // 
             this.PicPmp01.BackColor = System.Drawing.Color.Transparent;
-            this.PicPmp01.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.PicPmp01.Image = global::SimCogen.Properties.Resources.dot_red;
+            this.PicPmp01.BackgroundImage = global::SimCogen.Properties.Resources.dot_red;
+            this.PicPmp01.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.PicPmp01.InitialImage = global::SimCogen.Properties.Resources.dot_gray;
-            this.PicPmp01.Location = new System.Drawing.Point(593, 333);
+            this.PicPmp01.Location = new System.Drawing.Point(592, 333);
             this.PicPmp01.Name = "PicPmp01";
             this.PicPmp01.Size = new System.Drawing.Size(17, 16);
             this.PicPmp01.TabIndex = 13;
@@ -277,8 +280,8 @@
             // PicFan3
             // 
             this.PicFan3.BackColor = System.Drawing.Color.Transparent;
-            this.PicFan3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.PicFan3.Image = global::SimCogen.Properties.Resources.dot_red;
+            this.PicFan3.BackgroundImage = global::SimCogen.Properties.Resources.dot_red;
+            this.PicFan3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.PicFan3.InitialImage = global::SimCogen.Properties.Resources.dot_gray;
             this.PicFan3.Location = new System.Drawing.Point(270, 533);
             this.PicFan3.Name = "PicFan3";
@@ -289,8 +292,8 @@
             // PicFan1
             // 
             this.PicFan1.BackColor = System.Drawing.Color.Transparent;
-            this.PicFan1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.PicFan1.Image = global::SimCogen.Properties.Resources.dot_red;
+            this.PicFan1.BackgroundImage = global::SimCogen.Properties.Resources.dot_red;
+            this.PicFan1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.PicFan1.Location = new System.Drawing.Point(270, 503);
             this.PicFan1.Name = "PicFan1";
             this.PicFan1.Size = new System.Drawing.Size(17, 16);
@@ -300,8 +303,8 @@
             // PicFan2
             // 
             this.PicFan2.BackColor = System.Drawing.Color.Transparent;
-            this.PicFan2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.PicFan2.Image = global::SimCogen.Properties.Resources.dot_red;
+            this.PicFan2.BackgroundImage = global::SimCogen.Properties.Resources.dot_red;
+            this.PicFan2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.PicFan2.Location = new System.Drawing.Point(270, 518);
             this.PicFan2.Name = "PicFan2";
             this.PicFan2.Size = new System.Drawing.Size(17, 16);
@@ -320,7 +323,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1054, 597);
+            this.ClientSize = new System.Drawing.Size(1064, 611);
             this.Controls.Add(this.PicFan3);
             this.Controls.Add(this.PicFan2);
             this.Controls.Add(this.PicFan1);

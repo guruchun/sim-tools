@@ -2,13 +2,16 @@
 using System.Diagnostics;
 using FcpUtils;
 using System.Xml.Linq;
+using Timer = System.Windows.Forms.Timer;
+using static System.Windows.Forms.AxHost;
 
 namespace SimCogen
 {
     public partial class Final : Form
     {
-        private DataTable TblCogen = new DataTable("DtCogen");
-        private DataTable[] TblFCell = new DataTable[6];
+        private DataTable tblCogen = new DataTable("DtCogen");
+        private DataTable[] tblFCell = new DataTable[6];
+        private Timer updateTimer= new Timer();
 
         public Final()
         {
@@ -21,28 +24,28 @@ namespace SimCogen
             // set table columns
             string[] colName = { "Name", "Value", "Description" };
             string[] colType = { "System.String", "System.Object", "System.String" };
-            // for TblCogen
+            // for tblCogen
             for (int i = 0; i < colName.Length; i++)
             {
                 DataColumn col = new DataColumn(colName[i], dataType: Type.GetType(colType[i]) ?? typeof(String));
-                TblCogen.Columns.Add(col);
+                tblCogen.Columns.Add(col);
             }
             // for searching, filtering
-            TblCogen.PrimaryKey = new DataColumn[] { (TblCogen.Columns["Name"] ?? TblCogen.Columns[0]) };
-            DgvCogen.DataSource = TblCogen;
+            tblCogen.PrimaryKey = new DataColumn[] { (tblCogen.Columns["Name"] ?? tblCogen.Columns[0]) };
+            DgvCogen.DataSource = tblCogen;
 
-            // for TblFCell
+            // for tblFCell
             for (int fc = 0; fc < 6; fc++)
             {
-                TblFCell[fc] = new DataTable("DtFCell-" + fc);
+                this.tblFCell[fc] = new DataTable("DtFCell-" + fc);
                 for (int i = 0; i < colName.Length; i++)
                 {
                     DataColumn col = new DataColumn(colName[i], dataType: Type.GetType(colType[i]) ?? typeof(String));
-                    TblFCell[fc].Columns.Add(col);
+                    tblFCell[fc].Columns.Add(col);
                 }
-                TblFCell[fc].PrimaryKey = new DataColumn[] { TblFCell[fc].Columns["Name"] ?? TblFCell[fc].Columns[0] };
+                tblFCell[fc].PrimaryKey = new DataColumn[] { tblFCell[fc].Columns["Name"] ?? tblFCell[fc].Columns[0] };
             }
-            DgvFC.DataSource = TblFCell[0];
+            DgvFC.DataSource = tblFCell[0];
         }
 
         private void LoadDataTable()
@@ -91,9 +94,9 @@ namespace SimCogen
                     // add event handler
                     pb.Click += new EventHandler(PictureBox_Click);
 
-                    // add name on TblCogen
+                    // add name on tblCogen
                     string name = pb.Name[3..];
-                    TblCogen.Rows.Add(new object[] { name, false });
+                    tblCogen.Rows.Add(new object[] { name, 0 });
                 }
                 else
                 {
@@ -113,7 +116,7 @@ namespace SimCogen
 
                     // add name on dictionary
                     string name = tb.Name[3..];
-                    TblCogen.Rows.Add(new object[] { name, "" });
+                    tblCogen.Rows.Add(new object[] { name, "" });
                 }
                 else
                 {
@@ -132,8 +135,64 @@ namespace SimCogen
             // Loading된 데이터로 초기화한다.
             LoadDataTable();
 
-            // 화면을 업데이트한다.
+            // 화면을 업데이트하기 위해 Timer를 활성화한다.
+            updateTimer.Interval= 500;
+            updateTimer.Tick += UpdateTimer_Tick;
+            updateTimer.Enabled = true;
+            updateTimer.Start();
+        }
+
+        private void UpdateTimer_Tick(object? sender, EventArgs e)
+        {
             Final_Refresh();
+        }
+
+        private void UpdatePicBoxes(object picParent)
+        {
+            if (picParent == null)
+                return;
+
+            PictureBox? pa = picParent as PictureBox;
+            if (pa == null)
+                return;
+
+            foreach (var c in pa.Controls)
+            {
+                if (c is PictureBox pb)
+                {
+                    if (pb.Name.StartsWith("Pic"))
+                    {
+                        string name = pb.Name[3..];
+                        DataRow? row = tblCogen.Rows.Find(name);
+                        if (row is not null)
+                        {
+                            Int32 state = 0;
+                            if (row[1] is string)
+                            {
+                                Int32.TryParse((string)row[1], out state);
+                            } else if (row[1] is Int32)
+                            {
+                                state = (Int32)row[1];
+                            }
+                            else
+                            {
+                                Debug.Print("invalid value {0}", row[1].ToString());
+                                continue;
+                            }
+                            
+                            // set image by state
+                            if (state > 0)
+                            {
+                                pb.BackgroundImage = Properties.Resources.dot_green;
+                            }
+                            else
+                            {
+                                pb.BackgroundImage = Properties.Resources.dot_red;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void Final_Refresh()
@@ -145,31 +204,14 @@ namespace SimCogen
                     if (tb.Name.StartsWith("Txt"))
                     {
                         string name = tb.Name[3..];
-                        DataRow? row = TblCogen.Rows.Find(name);
+                        DataRow? row = tblCogen.Rows.Find(name);
                         if (row is not null)
                             tb.Text = (string)row[1];   // value
                     }
                 }
                 else if (c is PictureBox pb)
                 {
-                    if (pb.Name.StartsWith("Pic"))
-                    {
-                        string name = pb.Name[3..];
-                        DataRow? row = TblCogen.Rows.Find(name);
-                        if (row is not null)
-                        {
-                            bool state = (bool)row[1];   // value
-                            // set image by state
-                            if (state)
-                            {
-                                pb.Image = Properties.Resources.dot_green;
-                            }
-                            else
-                            {
-                                pb.Image = Properties.Resources.dot_red;
-                            }
-                        }
-                    }
+                    UpdatePicBoxes(pb);
                 } 
                 else
                 {
@@ -186,8 +228,16 @@ namespace SimCogen
             string name = txtBox.Name[3..];
             Debug.WriteLine($"TextBox {name} = {txtBox.Text}");
 
+            Double value;
+            bool isOk = Double.TryParse((string)txtBox.Text, out value);
+            if (!isOk)
+            {
+                Debug.Print("invalid value {0}", txtBox.Text);
+                return;
+            }
+
             // update on DataTable
-            DataRow? row = TblCogen.Rows.Find(name);
+            DataRow? row = tblCogen.Rows.Find(name);
             if (row is not null)
             {
                 row[1] = txtBox.Text;
@@ -200,13 +250,25 @@ namespace SimCogen
                 return;
 
             string name = picBox.Name[3..];
-            Debug.WriteLine($"PictureBox {name} = {picBox.Text}");
 
             // get current state
-            DataRow? row = TblCogen.Rows.Find(name);
+            DataRow? row = tblCogen.Rows.Find(name);
             if (row is not null)
             {
-                row[1] = !((bool)row[1]);
+                Int32 state = 0;
+                if (row[1] is string)
+                {
+                    Int32.TryParse((string)row[1], out state);
+                }
+                else if (row[1] is Int32)
+                {
+                    state = (Int32)row[1];
+                }
+                else
+                {
+                    Debug.Print("invalid value {0}", row[1].ToString());
+                }
+                row[1] = state > 0 ? 0 : 1;
             }
         }
     }
