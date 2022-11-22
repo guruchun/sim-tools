@@ -169,8 +169,9 @@
             this.DgvCogen.RowHeadersVisible = false;
             this.DgvCogen.RowHeadersWidth = 82;
             this.DgvCogen.RowTemplate.Height = 25;
-            this.DgvCogen.Size = new System.Drawing.Size(202, 256);
+            this.DgvCogen.Size = new System.Drawing.Size(235, 256);
             this.DgvCogen.TabIndex = 48;
+            this.DgvCogen.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvCogen_CellValueChanged);
             // 
             // DgvFC
             // 
@@ -181,7 +182,7 @@
             this.DgvFC.RowHeadersVisible = false;
             this.DgvFC.RowHeadersWidth = 82;
             this.DgvFC.RowTemplate.Height = 25;
-            this.DgvFC.Size = new System.Drawing.Size(202, 260);
+            this.DgvFC.Size = new System.Drawing.Size(235, 260);
             this.DgvFC.TabIndex = 47;
             // 
             // label5
