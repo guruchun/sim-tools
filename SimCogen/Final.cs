@@ -2,8 +2,8 @@
 using System.Diagnostics;
 using FcpUtils;
 using System.Xml.Linq;
+using System.IO.Ports;
 using Timer = System.Windows.Forms.Timer;
-using static System.Windows.Forms.AxHost;
 
 namespace SimCogen
 {
@@ -12,6 +12,7 @@ namespace SimCogen
         private DataTable tblCogen = new DataTable("DtCogen");
         private DataTable[] tblFCell = new DataTable[6];
         private Timer updateTimer= new Timer();
+        private SerialPort serialPort = new SerialPort();
 
         public Final()
         {
@@ -140,6 +141,21 @@ namespace SimCogen
             updateTimer.Tick += UpdateTimer_Tick;
             updateTimer.Enabled = true;
             updateTimer.Start();
+
+            // 시리얼포트
+            serialPort.DataReceived += SerialPort_DataReceived;
+            try
+            {
+                serialPort.PortName = "COM1";
+                serialPort.BaudRate = 9600;
+                serialPort.StopBits = StopBits.One;
+                serialPort.Parity = Parity.None;
+                serialPort.Handshake = Handshake.None;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Port config error, " + ex.Message);
+            }
         }
 
         private void UpdateTimer_Tick(object? sender, EventArgs e)
@@ -269,6 +285,142 @@ namespace SimCogen
                     Debug.Print("invalid value {0}", row[1].ToString());
                 }
                 row[1] = state > 0 ? 0 : 1;
+            }
+        }
+        private void RefreshPorts()
+        {
+            // show list of valid com ports
+            PortList.Items.Clear();
+            foreach (string s in SerialPort.GetPortNames())
+            {
+                PortList.Items.Add(s);
+            }
+
+            // find index
+            PortList.SelectedIndex = -1;
+            for (int i = 0; i < PortList.Items.Count; i++)
+            {
+                if (PortList.Items[i].ToString() == "COM1")
+                {
+                    PortList.SelectedIndex = i;
+                    break;
+                }
+            }
+            if (PortList.Items.Count > 0 && PortList.SelectedIndex == -1)
+                PortList.SelectedIndex = 0;
+        }
+        private void PortRefresh_Click(object sender, EventArgs e)
+        {
+            RefreshPorts();
+        }
+
+        private void PortOpen_Click(object sender, EventArgs e)
+        {
+            //dgvSigValuesFilter();
+
+            if (PortOpen.Text == "Open")
+            {
+                if (PortList.Items.Count < 1)
+                {
+                    Debug.WriteLine("serial port is not found");
+                    return;
+                }
+                try
+                {
+                    serialPort.PortName = (string)PortList.SelectedItem;
+                    Serial_Start();
+                    PortOpen.Text = "Close";
+                    PortList.Enabled = false;
+                    Debug.WriteLine(serialPort.PortName + " is opened ... ");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(serialPort.PortName + " open Error, " + ex.Message);
+                    return;
+                }
+            }
+            else
+            {
+                try
+                {
+                    Serial_Stop();
+                    PortOpen.Text = "Open";
+                    PortList.Enabled = true;
+                    Debug.WriteLine(serialPort.PortName + " is closed ... ");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(serialPort.PortName + " close Error, " + ex.Message);
+                    return;
+                }
+            }
+        }
+        void Serial_Start()
+        {
+            try
+            {
+                if (serialPort.IsOpen)
+                    serialPort.Close();
+
+                serialPort.Open();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Port open error , : " + ex.Message);
+                throw;
+            }
+        }
+
+        void Serial_Stop()
+        {
+            if (serialPort.IsOpen)
+                serialPort.Close();
+        }
+
+        internal void SendRequest(string txData)
+        {
+            if (!serialPort.IsOpen)
+            {
+                Debug.WriteLine("device port is not open");
+                return;
+            }
+
+            // create & send request message
+            try
+            {
+                serialPort.Write(txData, 0, txData.Length);
+                Debug.WriteLine("TX: {0:000}, {1}", txData.Length, txData);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("fail to send a message. ex={0}", ex.Message);
+            }
+        }
+
+        internal void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            string rxData = "";
+            try
+            {
+                if (serialPort.BytesToRead == 0)
+                    return;
+
+                // read byte until message completed or timeout
+                //rxData = serialPort.
+
+                // validate reqeust message
+
+                // handle received message
+
+                // parse message
+
+                // update datasource
+
+                // raise event(optional)
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("can't handle message, rx={0}, ex={1}", rxData, ex.Message);
             }
         }
     }

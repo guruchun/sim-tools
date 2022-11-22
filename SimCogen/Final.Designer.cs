@@ -55,6 +55,8 @@
             this.PicFan1 = new System.Windows.Forms.PictureBox();
             this.PicFan2 = new System.Windows.Forms.PictureBox();
             this.TxtPit03 = new System.Windows.Forms.TextBox();
+            this.PortList = new System.Windows.Forms.ComboBox();
+            this.PortOpen = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.CogenBG)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DgvFC)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DgvCogen)).BeginInit();
@@ -71,18 +73,20 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(21, 12);
+            this.label1.Location = new System.Drawing.Point(36, 24);
+            this.label1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 15);
+            this.label1.Size = new System.Drawing.Size(124, 30);
             this.label1.TabIndex = 0;
             this.label1.Text = "Cogen 상태";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(835, 309);
+            this.label3.Location = new System.Drawing.Point(1431, 618);
+            this.label3.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(83, 15);
+            this.label3.Size = new System.Drawing.Size(146, 30);
             this.label3.TabIndex = 2;
             this.label3.Text = "연료전지 조회";
             // 
@@ -90,76 +94,86 @@
             // 
             this.FcID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.FcID.FormattingEnabled = true;
-            this.FcID.Location = new System.Drawing.Point(985, 306);
+            this.FcID.Location = new System.Drawing.Point(1689, 612);
+            this.FcID.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.FcID.Name = "FcID";
-            this.FcID.Size = new System.Drawing.Size(56, 23);
+            this.FcID.Size = new System.Drawing.Size(93, 38);
             this.FcID.TabIndex = 3;
             // 
             // CogenBG
             // 
             this.CogenBG.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("CogenBG.BackgroundImage")));
             this.CogenBG.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.CogenBG.Location = new System.Drawing.Point(21, 33);
+            this.CogenBG.Location = new System.Drawing.Point(36, 66);
+            this.CogenBG.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.CogenBG.Name = "CogenBG";
-            this.CogenBG.Size = new System.Drawing.Size(798, 561);
+            this.CogenBG.Size = new System.Drawing.Size(1368, 1122);
             this.CogenBG.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.CogenBG.TabIndex = 4;
             this.CogenBG.TabStop = false;
             // 
             // TxtFwVer
             // 
-            this.TxtFwVer.Location = new System.Drawing.Point(44, 60);
+            this.TxtFwVer.Location = new System.Drawing.Point(75, 120);
+            this.TxtFwVer.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.TxtFwVer.Name = "TxtFwVer";
-            this.TxtFwVer.Size = new System.Drawing.Size(100, 23);
+            this.TxtFwVer.Size = new System.Drawing.Size(169, 35);
             this.TxtFwVer.TabIndex = 6;
             // 
             // TxtPit02
             // 
-            this.TxtPit02.Location = new System.Drawing.Point(161, 415);
+            this.TxtPit02.Location = new System.Drawing.Point(276, 830);
+            this.TxtPit02.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.TxtPit02.Name = "TxtPit02";
-            this.TxtPit02.Size = new System.Drawing.Size(56, 23);
+            this.TxtPit02.Size = new System.Drawing.Size(93, 35);
             this.TxtPit02.TabIndex = 6;
             // 
             // TxtTtTh3
             // 
-            this.TxtTtTh3.Location = new System.Drawing.Point(388, 408);
+            this.TxtTtTh3.Location = new System.Drawing.Point(665, 816);
+            this.TxtTtTh3.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.TxtTtTh3.Name = "TxtTtTh3";
-            this.TxtTtTh3.Size = new System.Drawing.Size(56, 23);
+            this.TxtTtTh3.Size = new System.Drawing.Size(93, 35);
             this.TxtTtTh3.TabIndex = 6;
             // 
             // TxtPit01
             // 
-            this.TxtPit01.Location = new System.Drawing.Point(388, 451);
+            this.TxtPit01.Location = new System.Drawing.Point(665, 902);
+            this.TxtPit01.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.TxtPit01.Name = "TxtPit01";
-            this.TxtPit01.Size = new System.Drawing.Size(56, 23);
+            this.TxtPit01.Size = new System.Drawing.Size(93, 35);
             this.TxtPit01.TabIndex = 7;
             // 
             // TxtThM
             // 
-            this.TxtThM.Location = new System.Drawing.Point(502, 288);
+            this.TxtThM.Location = new System.Drawing.Point(861, 576);
+            this.TxtThM.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.TxtThM.Name = "TxtThM";
-            this.TxtThM.Size = new System.Drawing.Size(56, 23);
+            this.TxtThM.Size = new System.Drawing.Size(93, 35);
             this.TxtThM.TabIndex = 8;
             // 
             // TxtThL
             // 
-            this.TxtThL.Location = new System.Drawing.Point(502, 367);
+            this.TxtThL.Location = new System.Drawing.Point(861, 734);
+            this.TxtThL.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.TxtThL.Name = "TxtThL";
-            this.TxtThL.Size = new System.Drawing.Size(56, 23);
+            this.TxtThL.Size = new System.Drawing.Size(93, 35);
             this.TxtThL.TabIndex = 9;
             // 
             // TxtThH
             // 
-            this.TxtThH.Location = new System.Drawing.Point(502, 210);
+            this.TxtThH.Location = new System.Drawing.Point(861, 420);
+            this.TxtThH.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.TxtThH.Name = "TxtThH";
-            this.TxtThH.Size = new System.Drawing.Size(56, 23);
+            this.TxtThH.Size = new System.Drawing.Size(93, 35);
             this.TxtThH.TabIndex = 10;
             // 
             // TxtTtTh6
             // 
-            this.TxtTtTh6.Location = new System.Drawing.Point(725, 192);
+            this.TxtTtTh6.Location = new System.Drawing.Point(1243, 384);
+            this.TxtTtTh6.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.TxtTtTh6.Name = "TxtTtTh6";
-            this.TxtTtTh6.Size = new System.Drawing.Size(56, 23);
+            this.TxtTtTh6.Size = new System.Drawing.Size(93, 35);
             this.TxtTtTh6.TabIndex = 11;
             // 
             // TankLevel
@@ -169,9 +183,10 @@
             this.TankLevel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.TankLevel.Font = new System.Drawing.Font("맑은 고딕", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.TankLevel.ForeColor = System.Drawing.Color.LightGray;
-            this.TankLevel.Location = new System.Drawing.Point(351, 198);
+            this.TankLevel.Location = new System.Drawing.Point(602, 396);
+            this.TankLevel.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.TankLevel.Name = "TankLevel";
-            this.TankLevel.Size = new System.Drawing.Size(145, 188);
+            this.TankLevel.Size = new System.Drawing.Size(249, 376);
             this.TankLevel.TabIndex = 14;
             this.TankLevel.Text = "축열조";
             this.TankLevel.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
@@ -180,18 +195,20 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(836, 12);
+            this.label2.Location = new System.Drawing.Point(1433, 24);
+            this.label2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(98, 15);
+            this.label2.Size = new System.Drawing.Size(173, 30);
             this.label2.TabIndex = 16;
             this.label2.Text = "Cogen 상태 설정";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(960, 309);
+            this.label5.Location = new System.Drawing.Point(1646, 618);
+            this.label5.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(22, 15);
+            this.label5.Size = new System.Drawing.Size(39, 30);
             this.label5.TabIndex = 18;
             this.label5.Text = "ID:";
             // 
@@ -199,12 +216,13 @@
             // 
             this.DgvFC.BackgroundColor = System.Drawing.SystemColors.Control;
             this.DgvFC.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvFC.Location = new System.Drawing.Point(839, 334);
+            this.DgvFC.Location = new System.Drawing.Point(1438, 668);
+            this.DgvFC.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.DgvFC.Name = "DgvFC";
             this.DgvFC.RowHeadersVisible = false;
             this.DgvFC.RowHeadersWidth = 82;
             this.DgvFC.RowTemplate.Height = 25;
-            this.DgvFC.Size = new System.Drawing.Size(202, 260);
+            this.DgvFC.Size = new System.Drawing.Size(346, 520);
             this.DgvFC.TabIndex = 19;
             // 
             // DgvCogen
@@ -213,12 +231,13 @@
             this.DgvCogen.AllowUserToDeleteRows = false;
             this.DgvCogen.BackgroundColor = System.Drawing.SystemColors.Control;
             this.DgvCogen.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvCogen.Location = new System.Drawing.Point(839, 33);
+            this.DgvCogen.Location = new System.Drawing.Point(1438, 66);
+            this.DgvCogen.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.DgvCogen.Name = "DgvCogen";
             this.DgvCogen.RowHeadersVisible = false;
             this.DgvCogen.RowHeadersWidth = 82;
             this.DgvCogen.RowTemplate.Height = 25;
-            this.DgvCogen.Size = new System.Drawing.Size(202, 256);
+            this.DgvCogen.Size = new System.Drawing.Size(346, 512);
             this.DgvCogen.TabIndex = 20;
             // 
             // PicNc417
@@ -226,9 +245,10 @@
             this.PicNc417.BackColor = System.Drawing.Color.Transparent;
             this.PicNc417.BackgroundImage = global::SimCogen.Properties.Resources.dot_red;
             this.PicNc417.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.PicNc417.Location = new System.Drawing.Point(514, 85);
+            this.PicNc417.Location = new System.Drawing.Point(881, 170);
+            this.PicNc417.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.PicNc417.Name = "PicNc417";
-            this.PicNc417.Size = new System.Drawing.Size(17, 16);
+            this.PicNc417.Size = new System.Drawing.Size(29, 32);
             this.PicNc417.TabIndex = 13;
             this.PicNc417.TabStop = false;
             // 
@@ -237,9 +257,10 @@
             this.PicNc413.BackColor = System.Drawing.Color.Transparent;
             this.PicNc413.BackgroundImage = global::SimCogen.Properties.Resources.dot_red;
             this.PicNc413.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.PicNc413.Location = new System.Drawing.Point(513, 132);
+            this.PicNc413.Location = new System.Drawing.Point(879, 264);
+            this.PicNc413.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.PicNc413.Name = "PicNc413";
-            this.PicNc413.Size = new System.Drawing.Size(17, 16);
+            this.PicNc413.Size = new System.Drawing.Size(29, 32);
             this.PicNc413.TabIndex = 13;
             this.PicNc413.TabStop = false;
             // 
@@ -248,9 +269,10 @@
             this.PicNc412.BackColor = System.Drawing.Color.Transparent;
             this.PicNc412.BackgroundImage = global::SimCogen.Properties.Resources.dot_red;
             this.PicNc412.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.PicNc412.Location = new System.Drawing.Point(516, 435);
+            this.PicNc412.Location = new System.Drawing.Point(885, 870);
+            this.PicNc412.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.PicNc412.Name = "PicNc412";
-            this.PicNc412.Size = new System.Drawing.Size(17, 16);
+            this.PicNc412.Size = new System.Drawing.Size(29, 32);
             this.PicNc412.TabIndex = 13;
             this.PicNc412.TabStop = false;
             // 
@@ -259,9 +281,10 @@
             this.PicPmp02.BackColor = System.Drawing.Color.Transparent;
             this.PicPmp02.BackgroundImage = global::SimCogen.Properties.Resources.dot_red;
             this.PicPmp02.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.PicPmp02.Location = new System.Drawing.Point(344, 423);
+            this.PicPmp02.Location = new System.Drawing.Point(590, 846);
+            this.PicPmp02.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.PicPmp02.Name = "PicPmp02";
-            this.PicPmp02.Size = new System.Drawing.Size(17, 16);
+            this.PicPmp02.Size = new System.Drawing.Size(29, 32);
             this.PicPmp02.TabIndex = 13;
             this.PicPmp02.TabStop = false;
             // 
@@ -271,9 +294,10 @@
             this.PicPmp01.BackgroundImage = global::SimCogen.Properties.Resources.dot_red;
             this.PicPmp01.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.PicPmp01.InitialImage = global::SimCogen.Properties.Resources.dot_gray;
-            this.PicPmp01.Location = new System.Drawing.Point(592, 333);
+            this.PicPmp01.Location = new System.Drawing.Point(1015, 666);
+            this.PicPmp01.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.PicPmp01.Name = "PicPmp01";
-            this.PicPmp01.Size = new System.Drawing.Size(17, 16);
+            this.PicPmp01.Size = new System.Drawing.Size(29, 32);
             this.PicPmp01.TabIndex = 13;
             this.PicPmp01.TabStop = false;
             // 
@@ -283,9 +307,10 @@
             this.PicFan3.BackgroundImage = global::SimCogen.Properties.Resources.dot_red;
             this.PicFan3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.PicFan3.InitialImage = global::SimCogen.Properties.Resources.dot_gray;
-            this.PicFan3.Location = new System.Drawing.Point(270, 533);
+            this.PicFan3.Location = new System.Drawing.Point(463, 1066);
+            this.PicFan3.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.PicFan3.Name = "PicFan3";
-            this.PicFan3.Size = new System.Drawing.Size(17, 16);
+            this.PicFan3.Size = new System.Drawing.Size(29, 32);
             this.PicFan3.TabIndex = 22;
             this.PicFan3.TabStop = false;
             // 
@@ -294,9 +319,10 @@
             this.PicFan1.BackColor = System.Drawing.Color.Transparent;
             this.PicFan1.BackgroundImage = global::SimCogen.Properties.Resources.dot_red;
             this.PicFan1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.PicFan1.Location = new System.Drawing.Point(270, 503);
+            this.PicFan1.Location = new System.Drawing.Point(463, 1006);
+            this.PicFan1.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.PicFan1.Name = "PicFan1";
-            this.PicFan1.Size = new System.Drawing.Size(17, 16);
+            this.PicFan1.Size = new System.Drawing.Size(29, 32);
             this.PicFan1.TabIndex = 24;
             this.PicFan1.TabStop = false;
             // 
@@ -305,25 +331,46 @@
             this.PicFan2.BackColor = System.Drawing.Color.Transparent;
             this.PicFan2.BackgroundImage = global::SimCogen.Properties.Resources.dot_red;
             this.PicFan2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.PicFan2.Location = new System.Drawing.Point(270, 518);
+            this.PicFan2.Location = new System.Drawing.Point(463, 1036);
+            this.PicFan2.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.PicFan2.Name = "PicFan2";
-            this.PicFan2.Size = new System.Drawing.Size(17, 16);
+            this.PicFan2.Size = new System.Drawing.Size(29, 32);
             this.PicFan2.TabIndex = 25;
             this.PicFan2.TabStop = false;
             // 
             // TxtPit03
             // 
-            this.TxtPit03.Location = new System.Drawing.Point(725, 332);
+            this.TxtPit03.Location = new System.Drawing.Point(1243, 664);
+            this.TxtPit03.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.TxtPit03.Name = "TxtPit03";
-            this.TxtPit03.Size = new System.Drawing.Size(56, 23);
+            this.TxtPit03.Size = new System.Drawing.Size(93, 35);
             this.TxtPit03.TabIndex = 11;
             this.TxtPit03.Tag = "PIT-02";
             // 
+            // PortList
+            // 
+            this.PortList.FormattingEnabled = true;
+            this.PortList.Location = new System.Drawing.Point(241, 18);
+            this.PortList.Name = "PortList";
+            this.PortList.Size = new System.Drawing.Size(212, 38);
+            this.PortList.TabIndex = 26;
+            // 
+            // PortOpen
+            // 
+            this.PortOpen.Location = new System.Drawing.Point(513, 16);
+            this.PortOpen.Name = "PortOpen";
+            this.PortOpen.Size = new System.Drawing.Size(131, 40);
+            this.PortOpen.TabIndex = 27;
+            this.PortOpen.Text = "Open";
+            this.PortOpen.UseVisualStyleBackColor = true;
+            // 
             // Final
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 30F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1064, 611);
+            this.ClientSize = new System.Drawing.Size(1824, 1222);
+            this.Controls.Add(this.PortOpen);
+            this.Controls.Add(this.PortList);
             this.Controls.Add(this.PicFan3);
             this.Controls.Add(this.PicFan2);
             this.Controls.Add(this.PicFan1);
@@ -351,6 +398,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.CogenBG);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.Name = "Final";
             this.Text = "Final";
             this.Load += new System.EventHandler(this.Final_Load);
@@ -398,5 +446,7 @@
         private PictureBox PicFan2;
         private PictureBox PicFan1;
         private TextBox TxtPit03;
+        private ComboBox PortList;
+        private Button PortOpen;
     }
 }
