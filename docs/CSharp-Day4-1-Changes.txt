@@ -1,6 +1,0 @@
-번경사항
- - 이벤트핸들러에서 화면 업데이트 기능 삭제 --> 타이머 핸들러로 변경 예정
- - 컨트롤 이름에서 txt, pic을 제외한 Name을 DataTable의 Name에 매칭
- - 이미지 배경을 투명처리하기 위한 Trick
- - DataTable: tblCogen, tblFCell[6] 향후 사용
- 

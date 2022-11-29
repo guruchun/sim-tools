@@ -7,7 +7,7 @@ namespace SimCogen
 {
     public partial class Day4 : Form
     {
-        private DataTable tblCogen = new DataTable("DtCogen");
+        private DataTable tblCogen = new("DtCogen");
         private DataTable[] tblFCell = new DataTable[6];
         private Timer updateTimer = new Timer();
         private SerialPort serialPort = new SerialPort();

@@ -1,0 +1,20 @@
+Day 4-1 번경사항
+ - 이벤트핸들러에서 화면 업데이트 기능 삭제 --> 타이머 핸들러로 변경 예정
+ - 컨트롤 이름에서 txt, pic을 제외한 Name을 DataTable의 Name에 매칭
+ - 이미지 배경을 투명처리하기 위한 Trick
+ - DataTable: tblCogen, tblFCell[6] 향후 사용
+ - Sytem.IO.Ports 추가하기
+
+Day 4-2 변경사항
+ - 시리얼포트 선택, 설정
+ - 메시지 처리기 추가
+ - Logger 추가하기
+	* 패키지 관리자: log4net 추가
+	* Program.cs: 
+		// config logger
+		log4net.Config.XmlConfigurator.Configure(
+			new System.IO.FileInfo("config/SimCogen-log4net.xml"));
+	* Day4.cs
+		static readonly ILog log = LogManager.GetLogger("Console");
+	
+ 
