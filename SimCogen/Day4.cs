@@ -1,9 +1,7 @@
 ﻿using System.Data;
 using System.Diagnostics;
-using FcpUtils;
-using System.Xml.Linq;
 using Timer = System.Windows.Forms.Timer;
-using static System.Windows.Forms.AxHost;
+using System.IO.Ports;
 
 namespace SimCogen
 {
@@ -11,7 +9,8 @@ namespace SimCogen
     {
         private DataTable tblCogen = new DataTable("DtCogen");
         private DataTable[] tblFCell = new DataTable[6];
-        //private Timer updateTimer = new Timer();
+        private Timer updateTimer = new Timer();
+        private SerialPort serialPort = new SerialPort();
 
         public Day4()
         {
@@ -51,9 +50,9 @@ namespace SimCogen
         private void LoadDataTable()
         {
             // 임시
-            string fileFullName = "config/init-data-cogen.txt";
+            //string fileFullName = "config/init-data-cogen.txt";
             // open property file
-            Property prop = new(fileFullName);
+            //Property prop = new(fileFullName);
 
             // update DataGridView directly
             //foreach (DataGridViewRow row in DgvCogen.Rows)
@@ -136,10 +135,13 @@ namespace SimCogen
             LoadDataTable();
 
             // 화면을 업데이트하기 위해 Timer를 활성화한다.
-            //updateTimer.Interval = 500;
-            //updateTimer.Tick += UpdateTimer_Tick;
-            //updateTimer.Enabled = true;
-            //updateTimer.Start();
+            updateTimer.Interval = 500;
+            updateTimer.Tick += UpdateTimer_Tick;
+            updateTimer.Enabled = true;
+            updateTimer.Start();
+
+            // serial 포트 설정
+
         }
 
         private void UpdateTimer_Tick(object? sender, EventArgs e)
@@ -182,14 +184,14 @@ namespace SimCogen
                             }
 
                             // set image by state
-                            if (state > 0)
-                            {
-                                pb.BackgroundImage = Properties.Resources.dot_green;
-                            }
-                            else
-                            {
-                                pb.BackgroundImage = Properties.Resources.dot_red;
-                            }
+                            //if (state > 0)
+                            //{
+                            //    pb.BackgroundImage = Properties.Resources.dot_green;
+                            //}
+                            //else
+                            //{
+                            //    pb.BackgroundImage = Properties.Resources.dot_red;
+                            //}
                         }
                     }
                 }
@@ -202,6 +204,9 @@ namespace SimCogen
             {
                 if (c is TextBox tb)
                 {
+                    if (tb.Focused)
+                        continue;
+
                     if (tb.Name.StartsWith("Txt"))
                     {
                         string name = tb.Name[3..];

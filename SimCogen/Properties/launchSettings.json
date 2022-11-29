@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "SimCogen": {
-      "commandName": "Project",
-      "hotReloadEnabled": false
-    }
-  }
-}

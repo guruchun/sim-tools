@@ -1,8 +1,7 @@
 ﻿using System.Data;
 using System.Diagnostics;
-using FcpUtils;
 using System.Xml.Linq;
-using System.IO.Ports;
+//using System.IO.Ports;
 using Timer = System.Windows.Forms.Timer;
 
 namespace SimCogen
