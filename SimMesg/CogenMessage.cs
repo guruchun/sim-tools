@@ -35,7 +35,7 @@ namespace SimMesg
 
         // key: mapIndex, value: BitDataInfo
         // Cogen Data to FCell (Request)
-        private static Dictionary<int, BitDataInfo> DicCogenTxDataInfo = new()
+        private static Dictionary<int, BitDataInfo> DicCogenTxDataInfo = new Dictionary<int, BitDataInfo>()
         {
             { 0, new BitDataInfo { ByteIndex=0, BitIndex = 0, BitWidth = 16,  ValScale=1, MappingTag = "TagName1" } },
             { 1, new BitDataInfo { ByteIndex=2, BitIndex = 0, BitWidth = 16,  ValScale=1, MappingTag = "TagName1" } },
@@ -71,19 +71,19 @@ namespace SimMesg
             { 0, new BitDataInfo { ByteIndex=0, BitIndex = 0, BitWidth = 1,  ValScale=1, MappingTag = "TagName1" } },
             { 1, new BitDataInfo { ByteIndex=0, BitIndex = 1, BitWidth = 1,  ValScale=1, MappingTag = "TagName1" } }
         };
-        private static Dictionary<string, BitDataInfo> DicFCellRxDataInfo = new()
+        private static Dictionary<string, BitDataInfo> DicFCellRxDataInfo = new Dictionary<string, BitDataInfo>()
         {
             { "TagMane1", DicCogenTxDataInfo[0] },
             { "TagName2", DicCogenTxDataInfo[1] }
         };
 
         // FCell Data to Cogen (Response)
-        private static Dictionary<int, BitDataInfo> DicFCellTxDataInfo = new()
+        private static Dictionary<int, BitDataInfo> DicFCellTxDataInfo = new Dictionary<int, BitDataInfo>()
         {
             { 0, new BitDataInfo { ByteIndex=0, BitIndex = 0, BitWidth = 1,  ValScale=1, MappingTag = "TagName1" } },
             { 1, new BitDataInfo { ByteIndex=0, BitIndex = 1, BitWidth = 1,  ValScale=1, MappingTag = "TagName1" } }
         };
-        private static Dictionary<string, BitDataInfo> DicCogenRxDataInfo = new()
+        private static Dictionary<string, BitDataInfo> DicCogenRxDataInfo = new Dictionary<string, BitDataInfo>()
         {
             { "TagMane1", DicCogenTxDataInfo[0] },
             { "TagName2", DicCogenTxDataInfo[1] }
@@ -101,7 +101,7 @@ namespace SimMesg
 
         public Dictionary<string, ValueType> ParseCogenRequest(byte[] reqData)
         {
-            Dictionary<string, ValueType> kvReq = new();
+            Dictionary<string, ValueType> kvReq = new Dictionary<string, ValueType>();
 
             int dicIndex = 0;
             for (int i = 0; i < reqData.Length; i++)
@@ -148,7 +148,7 @@ namespace SimMesg
 
         public Dictionary<string, ValueType> ParseFCellResponse(byte[] respData)
         {
-            Dictionary<string, ValueType> kvResp = new();
+            Dictionary<string, ValueType> kvResp = new Dictionary<string, ValueType>();
 
             int dicIndex = 0;
             for (int i = 0; i<respData.Length; i++)
