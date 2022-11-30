@@ -1,16 +1,20 @@
 ﻿using System.Data;
 using System.Diagnostics;
-using Timer = System.Windows.Forms.Timer;
+using System.Xml.Linq;
 using System.IO.Ports;
+using Timer = System.Windows.Forms.Timer;
 
 namespace SimCogen
 {
     public partial class Day4 : Form
     {
-        private DataTable tblCogen = new("DtCogen");
+        private DataTable tblCogen = new DataTable("DtCogen");
         private DataTable[] tblFCell = new DataTable[6];
         private Timer updateTimer = new Timer();
         private SerialPort serialPort = new SerialPort();
+        private int TnkLevel = 0;
+        private int TnkHeight = 0;
+        private Point TnkPosition;
 
         public Day4()
         {
@@ -111,17 +115,28 @@ namespace SimCogen
                     Debug.WriteLine($"TextBox Name={tb.Name}");
 
                     // add event handler
-                    tb.TextChanged += new EventHandler(TextBox_TextChanged);
+                    //tb.TextChanged += new EventHandler(TextBox_TextChanged);
+                    tb.KeyDown += new KeyEventHandler(TextBox_KeyDown);
 
                     // add name on dictionary
                     string name = tb.Name[3..];
-                    tblCogen.Rows.Add(new object[] { name, "" });
+                    if (name == "FwVer")
+                        tblCogen.Rows.Add(new object[] { name, "" });
+                    else
+                        tblCogen.Rows.Add(new object[] { name, (double)0 });
                 }
                 else
                 {
                     Debug.WriteLine($"TxtOther Name={tb.Name}");
                 }
             }
+
+            // setup 나머지
+            tblCogen.Rows.Add(new object[] { "Lvl-H", (int)0 });
+            tblCogen.Rows.Add(new object[] { "Lvl-M", (int)0 });
+            tblCogen.Rows.Add(new object[] { "Lvl-L", (int)0 });
+            this.TnkHeight = TankLevel.Height;
+            this.TnkPosition = TankLevel.Location;
 
             // ComboBox 초기화
             // design time에 입력한 item을 제거한다.
@@ -140,13 +155,26 @@ namespace SimCogen
             updateTimer.Enabled = true;
             updateTimer.Start();
 
-            // serial 포트 설정
-
+            // 시리얼포트
+            RefreshPorts();
+            serialPort.DataReceived += SerialPort_DataReceived;
+            try
+            {
+                serialPort.PortName = "COM1";
+                serialPort.BaudRate = 9600;
+                serialPort.StopBits = StopBits.One;
+                serialPort.Parity = Parity.None;
+                serialPort.Handshake = Handshake.None;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Port config error, " + ex.Message);
+            }
         }
 
         private void UpdateTimer_Tick(object? sender, EventArgs e)
         {
-            Form_Refresh();
+            Day4_Refresh();
         }
 
         private void UpdatePicBoxes(object picParent)
@@ -162,48 +190,46 @@ namespace SimCogen
             {
                 if (c is PictureBox pb)
                 {
-                    if (pb.Name.StartsWith("Pic"))
+                    if (!pb.Name.StartsWith("Pic"))
+                        continue;
+                    
+                    // check value -> update control
+                    string name = pb.Name[3..];
+                    DataRow? row = tblCogen.Rows.Find(name);
+                    if (row is not null)
                     {
-                        string name = pb.Name[3..];
-                        DataRow? row = tblCogen.Rows.Find(name);
-                        if (row is not null)
+                        int state = 0;
+                        if (row[1] is int)
                         {
-                            Int32 state = 0;
-                            if (row[1] is string)
-                            {
-                                Int32.TryParse((string)row[1], out state);
-                            }
-                            else if (row[1] is Int32)
-                            {
-                                state = (Int32)row[1];
-                            }
-                            else
-                            {
-                                Debug.Print("invalid value {0}", row[1].ToString());
-                                continue;
-                            }
+                            state = (int)row[1];
+                        }
+                        else
+                        {
+                            Debug.Print("invalid value {0}", row[1].ToString());
+                            continue;
+                        }
 
-                            // set image by state
-                            //if (state > 0)
-                            //{
-                            //    pb.BackgroundImage = Properties.Resources.dot_green;
-                            //}
-                            //else
-                            //{
-                            //    pb.BackgroundImage = Properties.Resources.dot_red;
-                            //}
+                        // set image by state
+                        if (state > 0)
+                        {
+                            pb.BackgroundImage = Properties.Resources.dot_green;
+                        }
+                        else
+                        {
+                            pb.BackgroundImage = Properties.Resources.dot_red;
                         }
                     }
                 }
-            }
+            } // end of foreach
         }
 
-        private void Form_Refresh()
+        private void Day4_Refresh()
         {
             foreach (var c in this.Controls)
             {
                 if (c is TextBox tb)
                 {
+                    // 입력중이면 skip
                     if (tb.Focused)
                         continue;
 
@@ -212,12 +238,43 @@ namespace SimCogen
                         string name = tb.Name[3..];
                         DataRow? row = tblCogen.Rows.Find(name);
                         if (row is not null)
-                            tb.Text = (string)row[1];   // value
+                        {
+                            if (name == "FwVer")
+                                tb.Text = (string)row[1];   // value
+                            else
+                                tb.Text = ((double)row[1]).ToString();
+                        }
                     }
                 }
                 else if (c is PictureBox pb)
                 {
                     UpdatePicBoxes(pb);
+                }
+                else if (c is Button btn)
+                {
+                    if (btn.Name == "TankLevel")
+                    {
+                        double H = GetTagValue("Lvl-H");
+                        double M = GetTagValue("Lvl-M");
+                        double L = GetTagValue("Lvl-L");
+                        int resize = 0;
+                        if (H > 0)
+                        {
+                            btn.Location = new Point(TnkPosition.X, TnkPosition.Y);
+                            btn.Height = this.TnkHeight;
+                        } else if (M > 0)
+                        {
+                            resize = (int)(this.TnkHeight * 0.25);
+                        } else if (L > 0)
+                        {
+                            resize = (int)(this.TnkHeight * 0.5);
+                        } else
+                        {
+                            resize = (int)(this.TnkHeight * 0.8);
+                        }
+                        btn.Location = new Point(TnkPosition.X, TnkPosition.Y + resize);
+                        btn.Height = this.TnkHeight - resize;
+                    }
                 }
                 else
                 {
@@ -226,27 +283,64 @@ namespace SimCogen
             } // end of foreach
         }
 
-        private void TextBox_TextChanged(object? sender, EventArgs e)
+        //private void TextBox_TextChanged(object? sender, EventArgs e)
+        //{
+        //    if (sender is not TextBox txtBox)
+        //        return;
+
+        //    string name = txtBox.Name[3..];
+        //    Debug.WriteLine($"TextBox {name} = {txtBox.Text}");
+
+        //    Double value;
+        //    bool isOk = Double.TryParse((string)txtBox.Text, out value);
+        //    if (!isOk)
+        //    {
+        //        Debug.Print("invalid value {0}", txtBox.Text);
+        //        return;
+        //    }
+
+        //    // update on DataTable
+        //    DataRow? row = tblCogen.Rows.Find(name);
+        //    if (row is not null)
+        //    {
+        //        row[1] = txtBox.Text;
+        //    }
+        //}
+
+        private void TextBox_KeyDown(object? sender, KeyEventArgs e)
         {
             if (sender is not TextBox txtBox)
                 return;
 
-            string name = txtBox.Name[3..];
-            Debug.WriteLine($"TextBox {name} = {txtBox.Text}");
-
-            Double value;
-            bool isOk = Double.TryParse((string)txtBox.Text, out value);
-            if (!isOk)
+            if (e.KeyCode== Keys.Enter)
             {
-                Debug.Print("invalid value {0}", txtBox.Text);
-                return;
-            }
+                string name = txtBox.Name[3..];
+                Debug.WriteLine($"TextBox {name} = {txtBox.Text}");
 
-            // update on DataTable
-            DataRow? row = tblCogen.Rows.Find(name);
-            if (row is not null)
-            {
-                row[1] = txtBox.Text;
+                // update on DataTable
+                DataRow? row = tblCogen.Rows.Find(name);
+                if (row is not null)
+                {
+                    if (name == "FwVer")
+                    {
+                        row[1] = txtBox.Text;
+                    }
+                    else
+                    {
+                        bool isOk = double.TryParse((string)txtBox.Text, out double value);
+                        if (isOk)
+                        {
+                            row[1] = value;
+                        }
+                        else {
+                            Debug.Print("invalid value {0}", txtBox.Text);
+                            return;
+                        }
+                    }
+                }
+
+                // set lost focus
+                this.ActiveControl = null;
             }
         }
 
@@ -261,21 +355,207 @@ namespace SimCogen
             DataRow? row = tblCogen.Rows.Find(name);
             if (row is not null)
             {
-                Int32 state = 0;
-                if (row[1] is string)
+                int state = 0;
+                if (row[1] is int)
                 {
-                    Int32.TryParse((string)row[1], out state);
-                }
-                else if (row[1] is Int32)
-                {
-                    state = (Int32)row[1];
+                    state = (int)row[1];
                 }
                 else
                 {
                     Debug.Print("invalid value {0}", row[1].ToString());
+                    return;
                 }
                 row[1] = state > 0 ? 0 : 1;
             }
+        }
+        private void RefreshPorts()
+        {
+            // show list of valid com ports
+            PortList.Items.Clear();
+            foreach (string s in SerialPort.GetPortNames())
+            {
+                PortList.Items.Add(s);
+            }
+
+            // find index
+            PortList.SelectedIndex = -1;
+            for (int i = 0; i < PortList.Items.Count; i++)
+            {
+                if (PortList.Items[i].ToString() == "COM1")
+                {
+                    PortList.SelectedIndex = i;
+                    break;
+                }
+            }
+            if (PortList.Items.Count > 0 && PortList.SelectedIndex == -1)
+                PortList.SelectedIndex = 0;
+        }
+        private void PortRefresh_Click(object sender, EventArgs e)
+        {
+            RefreshPorts();
+        }
+
+        private void PortOpen_Click(object sender, EventArgs e)
+        {
+            //dgvSigValuesFilter();
+
+            if (PortOpen.Text == "Open")
+            {
+                if (PortList.Items.Count < 1)
+                {
+                    Debug.WriteLine("serial port is not found");
+                    return;
+                }
+                try
+                {
+                    serialPort.PortName = (string)PortList.SelectedItem;
+                    Serial_Start();
+                    PortOpen.Text = "Close";
+                    PortList.Enabled = false;
+                    Debug.WriteLine(serialPort.PortName + " is opened ... ");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(serialPort.PortName + " open Error, " + ex.Message);
+                    return;
+                }
+            }
+            else
+            {
+                try
+                {
+                    Serial_Stop();
+                    PortOpen.Text = "Open";
+                    PortList.Enabled = true;
+                    Debug.WriteLine(serialPort.PortName + " is closed ... ");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(serialPort.PortName + " close Error, " + ex.Message);
+                    return;
+                }
+            }
+        }
+        void Serial_Start()
+        {
+            try
+            {
+                if (serialPort.IsOpen)
+                    serialPort.Close();
+
+                serialPort.Open();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Port open error , : " + ex.Message);
+                throw;
+            }
+        }
+
+        void Serial_Stop()
+        {
+            if (serialPort.IsOpen)
+                serialPort.Close();
+        }
+
+        internal void SendRequest(string txData)
+        {
+            if (!serialPort.IsOpen)
+            {
+                Debug.WriteLine("device port is not open");
+                return;
+            }
+
+            // create & send request message
+            try
+            {
+                serialPort.WriteLine(txData);
+                Debug.WriteLine("TX: {0:000}, {1}", txData.Length, txData);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("fail to send a message. ex={0}", ex.Message);
+            }
+        }
+
+        internal void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            string rxData = "";
+            try
+            {
+                if (serialPort.BytesToRead == 0)
+                    return;
+
+                // read byte until message completed or timeout
+                //rxData = serialPort.
+
+                // validate reqeust message
+
+                // handle received message
+
+                // parse message
+
+                // update datasource
+
+                // raise event(optional)
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("can't handle message, rx={0}, ex={1}", rxData, ex.Message);
+            }
+        }
+
+        private void SetTagValue(string tag, object value)
+        {
+            DataRow? row = tblCogen.Rows.Find(tag);
+            if (row is not null)
+            {
+                if (row[1] is int)
+                {
+                    row[1] = (int) value;
+                }
+                else if (row[1] is double)
+                {
+                    row[1] = (double)value;
+                }
+                else {
+                    Debug.Print("invalid value {0}", row[1].ToString());
+                }
+            }
+        }
+
+        private double GetTagValue(string tag)
+        {
+            double value = 0;
+            DataRow? row = tblCogen.Rows.Find(tag);
+            if (row is not null)
+            {
+                if (row[1] is int)
+                {
+                    value = (int)row[1];
+                } else if (row[1] is double)
+                {
+                    value = (double)row[1];
+                }
+            }
+            return value;
+        }
+
+        private void TankLevel_Click(object sender, EventArgs e)
+        {
+            TnkLevel = (TnkLevel + 1) % 4;
+            int L, M, H;
+            L = M = H = 0;
+            if (TnkLevel > 0)
+                L = 1;
+            if (TnkLevel > 1)
+                M = 1;
+            if (TnkLevel > 2)
+                H = 1;
+
+            SetTagValue("Lvl-H", H);
+            SetTagValue("Lvl-M", M);
+            SetTagValue("Lvl-L", L);
         }
     }
 }

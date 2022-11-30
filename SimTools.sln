@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimFCCM", "SimFCCM\SimFCCM.csproj", "{BB446CA1-F651-4850-8DCD-EAFC91557CE8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimFcCtlr", "SimFCCM\SimFcCtlr.csproj", "{BB446CA1-F651-4850-8DCD-EAFC91557CE8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimCogen", "SimCogen\SimCogen.csproj", "{CC47AC84-0D14-4F83-AD71-0E5E426754E3}"
 EndProject

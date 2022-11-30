@@ -7,6 +7,37 @@ Day 4-1 번경사항
 
 Day 4-2 변경사항
  - 시리얼포트 선택, 설정
+	* Day4_Load()
+		- 포트 목록 초기화, 첫번째 포트 선택
+	* 포트PortRefresh_Click()
+ - TextBox KeyDown 처리 --> 엔터키 입력하면 DataTable에 업데이트한다.
+	* Day4_Load()
+	* TextChanged 이벤트 -> KeyDown 이벤트
+		tb.KeyDown += new KeyEventHandler(TextBox_KeyDown);
+	* TextBox_TextChanged 핸들러 삭제
+	* TextBox_KeyDown 핸들러 추가
+		private void TextBox_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (sender is not TextBox txtBox)
+                return;
+
+            if (e.KeyCode== Keys.Enter)
+            {
+				// get textbox value
+				
+				// validation
+
+                // update on DataTable
+
+                // set lost focus
+                this.ActiveControl = null;
+            }
+        }
+ - TextBox 입력하는 동안 타이머에 의한 TextBox 업데이트 금지
+	* Day4_Refresh()
+		if (tb.Focused)
+			continue;
+	
  - 메시지 처리기 추가
  - Logger 추가하기
 	* 패키지 관리자: log4net 추가
@@ -16,5 +47,6 @@ Day 4-2 변경사항
 			new System.IO.FileInfo("config/SimCogen-log4net.xml"));
 	* Day4.cs
 		static readonly ILog log = LogManager.GetLogger("Console");
+		
 	
  
