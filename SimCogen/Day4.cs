@@ -1,8 +1,8 @@
 ﻿using System.Data;
 using System.Diagnostics;
-using System.Xml.Linq;
 using System.IO.Ports;
 using Timer = System.Windows.Forms.Timer;
+using SimMesg;
 
 namespace SimCogen
 {
@@ -11,10 +11,14 @@ namespace SimCogen
         private DataTable tblCogen = new DataTable("DtCogen");
         private DataTable[] tblFCell = new DataTable[6];
         private Timer updateTimer = new Timer();
+        private Timer sendTimer = new Timer();
         private SerialPort serialPort = new SerialPort();
         private int TnkLevel = 0;
         private int TnkHeight = 0;
         private Point TnkPosition;
+
+        private List<byte> rxData = new List<byte>();
+
 
         public Day4()
         {
@@ -155,6 +159,9 @@ namespace SimCogen
             updateTimer.Enabled = true;
             updateTimer.Start();
 
+            sendTimer.Interval = 1000;
+            sendTimer.Tick += SendTimer_Tick;
+
             // 시리얼포트
             RefreshPorts();
             serialPort.DataReceived += SerialPort_DataReceived;
@@ -175,6 +182,16 @@ namespace SimCogen
         private void UpdateTimer_Tick(object? sender, EventArgs e)
         {
             Day4_Refresh();
+        }
+
+        private void SendTimer_Tick(object? sender, EventArgs e)
+        {
+            Dictionary<string, int> values = new Dictionary<string, int>();
+            // TODO add key/value from dataTable
+            values.Add("Fan1", 0);
+
+            //byte[] txData = CogenMessage.MakeRequest(values);
+            //serialPort.Write(txData, 0, txData.Length);
         }
 
         private void UpdatePicBoxes(object picParent)
@@ -413,6 +430,10 @@ namespace SimCogen
                     PortOpen.Text = "Close";
                     PortList.Enabled = false;
                     Debug.WriteLine(serialPort.PortName + " is opened ... ");
+
+                    // start sending timer
+                    sendTimer.Enabled = true;
+                    sendTimer.Start();
                 }
                 catch (Exception ex)
                 {
@@ -428,6 +449,10 @@ namespace SimCogen
                     PortOpen.Text = "Open";
                     PortList.Enabled = true;
                     Debug.WriteLine(serialPort.PortName + " is closed ... ");
+
+                    // stop sending timer
+                    sendTimer.Enabled = false;
+                    sendTimer.Stop();
                 }
                 catch (Exception ex)
                 {
@@ -480,22 +505,41 @@ namespace SimCogen
 
         internal void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            string rxData = "";
+
             try
             {
                 if (serialPort.BytesToRead == 0)
                     return;
 
                 // read byte until message completed or timeout
-                //rxData = serialPort.
+                int readByte = serialPort.ReadByte();
+                while (readByte >= 0 && readByte != CogenMessage.STX)
+                {
+                    // drop
+                    readByte = (byte)serialPort.ReadByte();
+                }
+
+                // read data from STX to ETX
+                while (readByte >= 0 && readByte != CogenMessage.ETX)
+                {
+                    rxData.Add((byte)readByte);
+                    readByte = (byte)serialPort.ReadByte();
+                }
 
                 // validate reqeust message
+                // ETX까지 수신하지 못했으면 return
+
+                // ETX까지 수신했는데, validtation error이면 버리고 return
 
                 // handle received message
+                //Dictionary<string, int> dicVals = 
+                //    CogenMessage.ParseResponse(rxData.GetRange(4, 4).ToArray());
 
-                // parse message
-
-                // update datasource
+                //// update datasource
+                //foreach (var kv in dicVals)
+                //{
+                //    SetTagValue(kv.Key, kv.Value);
+                //}
 
                 // raise event(optional)
             }
@@ -504,7 +548,6 @@ namespace SimCogen
                 Debug.WriteLine("can't handle message, rx={0}, ex={1}", rxData, ex.Message);
             }
         }
-
         private void SetTagValue(string tag, object value)
         {
             DataRow? row = tblCogen.Rows.Find(tag);
@@ -523,7 +566,6 @@ namespace SimCogen
                 }
             }
         }
-
         private double GetTagValue(string tag)
         {
             double value = 0;
@@ -557,5 +599,6 @@ namespace SimCogen
             SetTagValue("Lvl-M", M);
             SetTagValue("Lvl-L", L);
         }
+
     }
 }

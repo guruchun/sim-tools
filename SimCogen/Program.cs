@@ -14,8 +14,8 @@ namespace SimCogen
             //Application.Run(new Day1());
             //Application.Run(new Day2());
             //Application.Run(new Day3());
-            Application.Run(new Day4());
-            //Application.Run(new Final());
+            //Application.Run(new Day4());
+            Application.Run(new Day5());
         }
     }
 }
