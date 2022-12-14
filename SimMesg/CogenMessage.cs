@@ -190,7 +190,39 @@ namespace SimMesg
 
         public byte[] MakeReqData(Dictionary<string, int> values)
         {
-            throw new NotImplementedException();
+            byte[] data = new byte[REQD_LEN] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            UInt16 temp = (UInt16)values["tCogenWtrCold"];
+            data[0] = (byte)(temp & 0xFF);
+            data[1] = (byte)(temp >> 8 & 0xFF);
+            
+            temp = (UInt16)values["tCogenTnkMid"];
+            data[2] = (byte)(temp & 0xFF);
+            data[3] = (byte)(temp >> 8 & 0xFF);
+
+            byte btmp = 0;
+            if (values["swtCogenSysRun1"] > 0)
+            {
+                btmp = (1 << 5);
+                data[5] = (byte)(data[5] | btmp);
+            }
+            if (values["swtCogenSysRun2"] > 0)
+            {
+                btmp = (1 << 6);
+                data[5] = (byte)(data[5] | btmp);
+            }
+            if (values["swtCogenSysRun3"] > 0)
+            {
+                btmp = (1 << 7);
+                data[5] = (byte)(data[5] | btmp);
+            }
+            if (values["swtCogenSysRun7"] > 0)
+            {
+                btmp = (1 << 3);
+                data[5] = (byte)(data[5] | btmp);
+            }
+
+            // TODO
+            return data;
         }
 
         public byte MakeCheckSum(byte[] data) 
@@ -211,13 +243,16 @@ namespace SimMesg
 
             List<byte> data = new List<byte>();
             data.Add(STX);
-            data.Add(1);            // Cogen Address
-            data.Add(FcId);         // FCell Address
-            data.Add(24);           // data length
+            data.Add(1);                    // Cogen Address
+            data.Add((byte)(0x30 + FcId));  // FCell Address
+            data.Add(24);                   // data length
             if (reqData.Length != REQD_LEN)
             {
                 Debug.WriteLine("Invalid ReqData Size = {0}", reqData.Length);
                 data.AddRange(dummy);
+            } else
+            {
+                data.AddRange(reqData);
             }
             data.Add(MakeCheckSum(data.GetRange(2, REQD_LEN+2).ToArray()));
             data.Add(ETX);

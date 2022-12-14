@@ -41,24 +41,11 @@ namespace SimCogen
             // for searching, filtering
             tblCogen.PrimaryKey = new DataColumn[] { (tblCogen.Columns["Name"] ?? tblCogen.Columns[0]) };
             DgvCogen.DataSource = tblCogen;
-
-            // for tblFCell
-            for (int fc = 0; fc < 6; fc++)
-            {
-                this.tblFCell[fc] = new DataTable("DtFCell-" + fc);
-                for (int i = 0; i < colName.Length; i++)
-                {
-                    DataColumn col = new DataColumn(colName[i], dataType: Type.GetType(colType[i]) ?? typeof(String));
-                    tblFCell[fc].Columns.Add(col);
-                }
-                tblFCell[fc].PrimaryKey = new DataColumn[] { tblFCell[fc].Columns["Name"] ?? tblFCell[fc].Columns[0] };
-            }
-            DgvFC.DataSource = tblFCell[0];
         }
 
         private void LoadDataTable()
         {
-            // 임시
+            // 파일에서 읽어오기
             //string fileFullName = "config/init-data-cogen.txt";
             // open property file
             //Property prop = new(fileFullName);
@@ -78,7 +65,40 @@ namespace SimCogen
             //    }
             //}
 
-            // update DataTable
+            // 기본값 설정하기
+            tblCogen.Rows.Add(new object[] { "cogenFwVer", "" });
+            tblCogen.Rows.Add(new object[] { "tCogenTnkHigh", (double)45.3 });
+            tblCogen.Rows.Add(new object[] { "tCogenTnkMid", (double)40.5 });
+            tblCogen.Rows.Add(new object[] { "tCogenTnkLow", (double)35.1 });
+            tblCogen.Rows.Add(new object[] { "pCogenRadLoop", (double)0 });
+            tblCogen.Rows.Add(new object[] { "tCogenWtrCold", (double)0 });
+            tblCogen.Rows.Add(new object[] { "pCogenWtrCold", (double)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenPmpColdMode", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenPmpColdEn", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "rCogenPmpColdDes", (double)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenFanMode", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenFan12", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenFan34", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenFan56", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenVlvTnkSupply", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenVlvTnkSplMode", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenVlvDrain", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenLvlHigh", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenLvlMid", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenLvlLow", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "pCogenWtrCustIn", (double)0 });
+            tblCogen.Rows.Add(new object[] { "tCogenWtrCustOut", (double)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenVlvHotMode", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenVlvHotOut", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenPmpHotMode", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenPmpHotEn", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenSysRun1", (byte)1 });
+            tblCogen.Rows.Add(new object[] { "swtCogenSysRun2", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenSysRun3", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenSysRun4", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenSysRun5", (byte)0 });
+            tblCogen.Rows.Add(new object[] { "swtCogenSysRun6", (byte)1 });
+            tblCogen.Rows.Add(new object[] { "swtCogenSysRun7", (byte)0 });
         }
 
         private void Day5_Load(object sender, EventArgs e)
@@ -101,10 +121,6 @@ namespace SimCogen
 
                     // add event handler
                     pb.Click += new EventHandler(PictureBox_Click);
-
-                    // add name on tblCogen
-                    string name = pb.Name[3..];
-                    tblCogen.Rows.Add(new object[] { name, 0 });
                 }
                 else
                 {
@@ -122,24 +138,12 @@ namespace SimCogen
                     // add event handler
                     //tb.TextChanged += new EventHandler(TextBox_TextChanged);
                     tb.KeyDown += new KeyEventHandler(TextBox_KeyDown);
-
-                    // add name on dictionary
-                    string name = tb.Name[3..];
-                    if (name == "FwVer")
-                        tblCogen.Rows.Add(new object[] { name, "" });
-                    else
-                        tblCogen.Rows.Add(new object[] { name, (double)0 });
                 }
                 else
                 {
                     Debug.WriteLine($"TxtOther Name={tb.Name}");
                 }
             }
-
-            // setup 나머지
-            tblCogen.Rows.Add(new object[] { "Lvl-H", (int)0 });
-            tblCogen.Rows.Add(new object[] { "Lvl-M", (int)0 });
-            tblCogen.Rows.Add(new object[] { "Lvl-L", (int)0 });
             this.TnkHeight = TankLevel.Height;
             this.TnkPosition = TankLevel.Location;
 
@@ -147,21 +151,12 @@ namespace SimCogen
             // design time에 입력한 item을 제거한다.
             this.FcID.Items.Clear();
             // configuration에 따라 FC의 개수만큼 설정한다.
-            List<string> fcList = new() { "01", "02", "03", "04", "05", "06" };
+            List<string> fcList = new() { "01", "02", "03", "04", "05", "06", "07" };
             this.FcID.Items.AddRange(fcList.ToArray());
             this.FcID.SelectedIndex = 0;
 
             // Loading된 데이터로 초기화한다.
             LoadDataTable();
-
-            // 화면을 업데이트하기 위해 Timer를 활성화한다.
-            updateTimer.Interval = 500;
-            updateTimer.Tick += UpdateTimer_Tick;
-            updateTimer.Enabled = true;
-            updateTimer.Start();
-
-            sendTimer.Interval = 1000;
-            sendTimer.Tick += SendTimer_Tick;
 
             // 시리얼포트
             RefreshPorts();
@@ -178,6 +173,15 @@ namespace SimCogen
             {
                 Debug.WriteLine("Port config error, " + ex.Message);
             }
+
+            // 화면을 업데이트하기 위해 Timer를 활성화한다.
+            updateTimer.Interval = 500;
+            updateTimer.Tick += UpdateTimer_Tick;
+            updateTimer.Enabled = true;
+            updateTimer.Start();
+
+            sendTimer.Interval = 1000;
+            sendTimer.Tick += SendTimer_Tick;
         }
 
         private void UpdateTimer_Tick(object? sender, EventArgs e)
@@ -215,29 +219,16 @@ namespace SimCogen
                     
                     // check value -> update control
                     string name = pb.Name[3..];
-                    DataRow? row = tblCogen.Rows.Find(name);
-                    if (row is not null)
-                    {
-                        int state = 0;
-                        if (row[1] is int)
-                        {
-                            state = (int)row[1];
-                        }
-                        else
-                        {
-                            Debug.Print("invalid value {0}", row[1].ToString());
-                            continue;
-                        }
+                    double state = GetTagValue(name);
 
-                        // set image by state
-                        if (state > 0)
-                        {
-                            pb.BackgroundImage = Properties.Resources.dot_green;
-                        }
-                        else
-                        {
-                            pb.BackgroundImage = Properties.Resources.dot_red;
-                        }
+                    // set image by state
+                    if (state > 0)
+                    {
+                        pb.BackgroundImage = Properties.Resources.dot_green;
+                    }
+                    else
+                    {
+                        pb.BackgroundImage = Properties.Resources.dot_red;
                     }
                 }
             } // end of foreach
@@ -256,13 +247,13 @@ namespace SimCogen
                     if (tb.Name.StartsWith("Txt"))
                     {
                         string name = tb.Name[3..];
-                        DataRow? row = tblCogen.Rows.Find(name);
-                        if (row is not null)
+                        if (name == "FwVer")
                         {
-                            if (name == "FwVer")
-                                tb.Text = (string)row[1];   // value
-                            else
-                                tb.Text = ((double)row[1]).ToString();
+                            //tb.Text = (string)row[1];   // value
+                        }
+                        else
+                        {
+                            tb.Text = GetTagValue(name).ToString();
                         }
                     }
                 }
@@ -274,9 +265,9 @@ namespace SimCogen
                 {
                     if (btn.Name == "TankLevel")
                     {
-                        double H = GetTagValue("Lvl-H");
-                        double M = GetTagValue("Lvl-M");
-                        double L = GetTagValue("Lvl-L");
+                        double H = GetTagValue("swtCogenLvlHigh");
+                        double M = GetTagValue("swtCogenLvlMid");
+                        double L = GetTagValue("swtCogenLvlLow");
                         int resize = 0;
                         if (H > 0)
                         {
@@ -338,24 +329,20 @@ namespace SimCogen
                 Debug.WriteLine($"TextBox {name} = {txtBox.Text}");
 
                 // update on DataTable
-                DataRow? row = tblCogen.Rows.Find(name);
-                if (row is not null)
+                if (name == "FwVer")
                 {
-                    if (name == "FwVer")
+                    SetTagValue(name, txtBox.Text);
+                }
+                else
+                {
+                    bool isOk = double.TryParse((string)txtBox.Text, out double value);
+                    if (isOk)
                     {
-                        row[1] = txtBox.Text;
+                        SetTagValue(name, value);
                     }
-                    else
-                    {
-                        bool isOk = double.TryParse((string)txtBox.Text, out double value);
-                        if (isOk)
-                        {
-                            row[1] = value;
-                        }
-                        else {
-                            Debug.Print("invalid value {0}", txtBox.Text);
-                            return;
-                        }
+                    else {
+                        Debug.Print("invalid value {0}", txtBox.Text);
+                        return;
                     }
                 }
 
@@ -371,22 +358,11 @@ namespace SimCogen
 
             string name = picBox.Name[3..];
 
-            // get current state
-            DataRow? row = tblCogen.Rows.Find(name);
-            if (row is not null)
-            {
-                int state = 0;
-                if (row[1] is int)
-                {
-                    state = (int)row[1];
-                }
-                else
-                {
-                    Debug.Print("invalid value {0}", row[1].ToString());
-                    return;
-                }
-                row[1] = state > 0 ? 0 : 1;
-            }
+            // get current state --> toggle as new state
+            double state = GetTagValue(name);
+            // toggle
+            byte st = (byte)(state > 0 ? 0 : 1);
+            SetTagValue(name, st);
         }
         private void RefreshPorts()
         {
@@ -577,17 +553,7 @@ namespace SimCogen
             DataRow? row = tblCogen.Rows.Find(tag);
             if (row is not null)
             {
-                if (row[1] is int)
-                {
-                    row[1] = (int) value;
-                }
-                else if (row[1] is double)
-                {
-                    row[1] = (double)value;
-                }
-                else {
-                    Debug.Print("invalid value {0}", row[1].ToString());
-                }
+                row[1] = value;
             }
         }
 
@@ -597,12 +563,18 @@ namespace SimCogen
             DataRow? row = tblCogen.Rows.Find(tag);
             if (row is not null)
             {
-                if (row[1] is int)
+                if (row[1] is byte)
                 {
-                    value = (int)row[1];
+                    value = (byte)row[1];
                 } else if (row[1] is double)
                 {
                     value = (double)row[1];
+                } else if (row[1] is string)
+                {
+                   double.TryParse((string)row[1], out value);
+                } else
+                {
+                    Debug.Print("invalid value {0}", row[1].ToString());
                 }
             }
             return value;
@@ -611,7 +583,7 @@ namespace SimCogen
         private void TankLevel_Click(object sender, EventArgs e)
         {
             TnkLevel = (TnkLevel + 1) % 4;
-            int L, M, H;
+            byte L, M, H;
             L = M = H = 0;
             if (TnkLevel > 0)
                 L = 1;
@@ -620,9 +592,9 @@ namespace SimCogen
             if (TnkLevel > 2)
                 H = 1;
 
-            SetTagValue("Lvl-H", H);
-            SetTagValue("Lvl-M", M);
-            SetTagValue("Lvl-L", L);
+            SetTagValue("swtCogenLvlHigh", H);
+            SetTagValue("swtCogenLvlMid", M);
+            SetTagValue("swtCogenLvlLow", L);
         }
 
     }
