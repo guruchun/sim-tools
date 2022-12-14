@@ -59,6 +59,8 @@ Day 4-2 변경사항
 Day5(Final) 변경사항
 - SimCtlr 프로젝트 추가됨
 	* Cogen에 응답하는 연료전지를 시뮬레이션하는 용도임
+- SimMesg 프로젝트 추가됨
+	* Cogen Message를 생성하거나 해석하는 라이브러리
 - Splitter Layout 적용
 	* LeftSide: P&ID View
 	* RightSide: DataView

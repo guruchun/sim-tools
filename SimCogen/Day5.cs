@@ -19,7 +19,6 @@ namespace SimCogen
 
         private List<byte> rxData = new List<byte>();
         private CogenMessage cogenMesg= new CogenMessage();
-        private string[] cogenTxTags= new string[] {"Pmp01Des"};
 
         public Day5()
         {
@@ -163,7 +162,6 @@ namespace SimCogen
             serialPort.DataReceived += SerialPort_DataReceived;
             try
             {
-                serialPort.PortName = "COM1";
                 serialPort.BaudRate = 9600;
                 serialPort.StopBits = StopBits.One;
                 serialPort.Parity = Parity.None;
@@ -180,6 +178,7 @@ namespace SimCogen
             updateTimer.Enabled = true;
             updateTimer.Start();
 
+            // 전송주기 설정, 전송하기
             sendTimer.Interval = 1000;
             sendTimer.Tick += SendTimer_Tick;
         }
@@ -191,14 +190,22 @@ namespace SimCogen
 
         private void SendTimer_Tick(object? sender, EventArgs e)
         {
-            Dictionary<string, int> values = new Dictionary<string, int>();
-            // TODO add key/value from dataTable
-            values.Add("Fan1", 0);
+            Dictionary<string, double> values = new Dictionary<string, double>();
+            foreach(DataRow row in tblCogen.Rows)
+            {
+                if (row[1] is double)
+                {
+                    values.Add((string)row[0], (double)row[1]);
+                } else if (row[1] is byte)
+                {
+                    values.Add((string)row[0], (double)(byte)row[1]);
+                }
+            }
 
             byte[] txData = cogenMesg.MakeReqData(values);
             byte.TryParse(FcID.Text, out byte idFc);
             byte[] txMesg = cogenMesg.MakeReqMessage(idFc, txData);
-            serialPort.Write(txData, 0, txData.Length);
+            serialPort.Write(txMesg, 0, txMesg.Length);
         }
 
         private void UpdatePicBoxes(object picParent)
@@ -500,28 +507,36 @@ namespace SimCogen
                 }
                 if (readByte != CogenMessage.STX)
                 {
-                    Debug.WriteLine("invalid response from FCell, data={0}", BitConverter.ToString(rxData.ToArray()));
+                    Debug.WriteLine($"invalid response from FCell, No STX, data={BitConverter.ToString(rxData.ToArray())}");
                     rxData.Clear();
                     return;
+                }
+                if (readByte == CogenMessage.STX)
+                {
+                    if (rxData.Count> 0)
+                    {
+                        Debug.WriteLine($"drop garbage from FCell, Before STX, data={BitConverter.ToString(rxData.ToArray())}");
+                        rxData.Clear();
+                    }
                 }
 
                 // read byte until message completed(ETX) or timeout
                 rxData.Add((byte)readByte);
                 while (readByte >= 0 && readByte != CogenMessage.ETX)
                 {
-                    rxData.Add((byte)readByte);
                     readByte = (byte)serialPort.ReadByte();
+                    rxData.Add((byte)readByte);
                 }
                 // ETX까지 수신하지 못했으면 return
-                if (readByte != CogenMessage.STX)
+                if (readByte != CogenMessage.ETX)
                 {
-                    Debug.WriteLine("receiving from FCell, data={0}", BitConverter.ToString(rxData.ToArray()));
+                    Debug.WriteLine($"receiving from FCell, data={BitConverter.ToString(rxData.ToArray())}");
                     return;
                 }
 
                 // ETX까지 수신했는데, validtation error이면 버리고 return
                 // Check Length, Checksum
-                if (cogenMesg.MakeCheckSum(rxData.ToArray()) != 0)
+                if (cogenMesg.MakeCheckSum(rxData.GetRange(0, rxData.Count - 2).ToArray()) != rxData[rxData.Count-2])
                 {
                     Debug.WriteLine("invalid checksum from FCell, data={0}", BitConverter.ToString(rxData.ToArray()));
                     return;
@@ -531,11 +546,13 @@ namespace SimCogen
                 Dictionary<string, ValueType> dicVals = 
                     cogenMesg.ParseFCellResponse(rxData.GetRange(4, 4).ToArray());
 
+                rxData.Clear();
+
                 // update datasource
-                foreach (var kv in dicVals)
-                {
-                    SetTagValue(kv.Key, kv.Value);
-                }
+                //foreach (var kv in dicVals)
+                //{
+                //    SetTagValue(kv.Key, kv.Value);
+                //}
 
                 // raise event(optional)
 

@@ -150,48 +150,50 @@ namespace SimMesg
         {
             Dictionary<string, ValueType> kvResp = new Dictionary<string, ValueType>();
 
-            int dicIndex = 0;
-            for (int i = 0; i<respData.Length; i++)
-            {
-                for (int j = 0; j<8;)
-                {
-                    dicIndex = i * 8 + j;
-                    // find tag
-                    if (DicFCellTxDataInfo.TryGetValue(dicIndex, out BitDataInfo info))
-                    {
-                        // get value
-                        int valRaw = 0;
-                        if (info.BitWidth > 1)
-                        {
-                            valRaw = (int)BitOP.BitRangeGet(respData[i], (int)info.BitIndex, info.BitWidth);
-                        }
-                        else
-                        {
-                            valRaw = BitOP.IsBitSet(respData[i], j) ? 1 : 0;
-                        }
-                        // get scale --> ignored
+            //int dicIndex = 0;
+            //for (int i = 0; i<respData.Length; i++)
+            //{
+            //    for (int j = 0; j<8;)
+            //    {
+            //        dicIndex = i * 8 + j;
+            //        // find tag
+            //        if (DicFCellTxDataInfo.TryGetValue(dicIndex, out BitDataInfo info))
+            //        {
+            //            // get value
+            //            int valRaw = 0;
+            //            if (info.BitWidth > 1)
+            //            {
+            //                valRaw = (int)BitOP.BitRangeGet(respData[i], (int)info.BitIndex, info.BitWidth);
+            //            }
+            //            else
+            //            {
+            //                valRaw = BitOP.IsBitSet(respData[i], j) ? 1 : 0;
+            //            }
+            //            // get scale --> ignored
 
-                        // add (tag, value)
-                        kvResp.Add(info.MappingTag, valRaw);
+            //            // add (tag, value)
+            //            kvResp.Add(info.MappingTag, valRaw);
 
-                        // goto next tag
-                        j += (int)info.BitWidth;
-                    }
-                    // not found tag
-                    else
-                    {
-                        j++;
-                    }
-                }
-            }
+            //            // goto next tag
+            //            j += (int)info.BitWidth;
+            //        }
+            //        // not found tag
+            //        else
+            //        {
+            //            j++;
+            //        }
+            //    }
+            //}
 
             return kvResp;
         }
 
-        public byte[] MakeReqData(Dictionary<string, int> values)
+        public byte[] MakeReqData(Dictionary<string, double> values)
         {
             byte[] data = new byte[REQD_LEN] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            UInt16 temp = (UInt16)values["tCogenWtrCold"];
+
+            double dtemp = values["tCogenWtrCold"];
+            UInt16 temp = (UInt16)(dtemp * 10);
             data[0] = (byte)(temp & 0xFF);
             data[1] = (byte)(temp >> 8 & 0xFF);
             
@@ -245,7 +247,7 @@ namespace SimMesg
             data.Add(STX);
             data.Add(1);                    // Cogen Address
             data.Add((byte)(0x30 + FcId));  // FCell Address
-            data.Add(24);                   // data length
+            data.Add((byte)reqData.Length);                   // data length
             if (reqData.Length != REQD_LEN)
             {
                 Debug.WriteLine("Invalid ReqData Size = {0}", reqData.Length);
@@ -254,7 +256,7 @@ namespace SimMesg
             {
                 data.AddRange(reqData);
             }
-            data.Add(MakeCheckSum(data.GetRange(2, REQD_LEN+2).ToArray()));
+            data.Add(MakeCheckSum(data.GetRange(0, REQD_LEN+4).ToArray()));
             data.Add(ETX);
 
             return data.ToArray();
